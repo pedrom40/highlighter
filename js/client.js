@@ -15,7 +15,7 @@ $(document).ready(function(e) {
 	});
 	
 	
-	// dialog windows
+	// init dialog windows
 	$('#categorySelectionDialog').dialog({
 		autoOpen:false,
 		show: {
@@ -28,6 +28,17 @@ $(document).ready(function(e) {
 		}
 	});
 	$('#editSelectionDialog').dialog({
+		autoOpen:false,
+		show: {
+			effect: "fadeIn",
+			duration: 500
+		},
+		hide: {
+			effect: "fadeOut",
+			duration: 500
+		}
+	});
+	$('#deleteSelectionDialog').dialog({
 		autoOpen:false,
 		show: {
 			effect: "fadeIn",
@@ -57,8 +68,14 @@ $(document).ready(function(e) {
 	
 	// listener for delete element btn clicks
 	$('#selectionsContainer dl').on('click', 'a.selectionDeleteBtn.ui-button.ui-widget.ui-corner-all.ui-button-icon-only', function(){
-    deleteSelection(this.id);
+    deleteSelectionConfirm(this.id);
 	});
+	$('#deleteSelectionConfirmBtn').click(function(e) {
+    deleteSelection();
+  });
+	$('#deleteSelectionCancelBtn').click(function(e) {
+    resetDeleteSelectionDialog();
+  });
 	
 });
 
@@ -186,7 +203,7 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 		// push to corresponding list
 		$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
 		$('#category'+categoryIDToSaveItTo).append(''+
-			'<dd class="buttons">'+
+			'<dd id="buttons_'+createIDString+'" class="buttons">'+
 				'<a id="'+createIDString+'_editBtn" class="selectionEditBtn ui-button ui-widget ui-corner-all ui-button-icon-only" title="Edit Selection"><span class="ui-icon ui-icon-pencil"></span> Edit Selection</a>'+
 				'<a id="'+createIDString+'_deleteBtn" class="selectionDeleteBtn ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Selection"><span class="ui-icon ui-icon-close"></span> Delete Selection</a>'+
 			'</dd>');
@@ -228,7 +245,7 @@ function hightlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
 	term = term.replace(/(\s+)/,'(<[^>]+>)*$1(<[^>]+>)*');
 	var pattern = new RegExp("("+term+")", "gi");
 	
-	src_str = src_str.replace(pattern, '<mark id=category'+categoryIDToSaveItTo+'_'+elementNumber+' class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
+	src_str = src_str.replace(pattern, '<mark id="category'+categoryIDToSaveItTo+'_'+elementNumber+'" class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
 	src_str = src_str.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
 	
 	$('#cbContent').html(src_str);
@@ -272,8 +289,52 @@ function saveEditedSelection(){
 	
 }
 
-function deleteSelection(elementID){
-	alert('Delete '+elementID);
+function deleteSelectionConfirm(elementID){
+	
+	// open category selection dialog
+	$('#deleteSelectionDialog').dialog('open');
+	
+	// remove btn identifier
+	var cleanElementID = elementID.replace("_deleteBtn", "");
+	
+	// set selection in window for reference
+	$('#deleteSelectionDisplay').html('<em>'+$('dd#'+cleanElementID).html()+'</em>');
+	
+	// set id
+	$('#deleteSelectionElementID').val(cleanElementID);
+	
+}
+
+function deleteSelection(){
+	
+	// get clean ID
+	var elementID = $('#deleteSelectionElementID').val();
+	
+	// remove highlight
+	deleteHightlightedSelection(elementID);
+	
+	// destroy dd element
+	$('dd#'+elementID).remove();
+	
+	// destroy dd buttons
+	$('dd#buttons_'+elementID).remove();
+	
+	// close delete dialog
+	resetDeleteSelectionDialog();
+	
+}
+
+function deleteHightlightedSelection(elementID){
+	
+	var element = $('#cbContent'); //convert string to JQuery element
+	
+	element.find('mark#'+elementID).each(function(index){
+    var text = $(this).text(); //get span content
+    $(this).replaceWith(text); //replace all span with just content
+	});
+	
+	var newString = element.html();//get back new string
+	
 }
 
 function resetEditSelectionDialog(){
@@ -284,5 +345,15 @@ function resetEditSelectionDialog(){
 	
 	// close the category selection dialog
 	$('#editSelectionDialog').dialog('close');
+	
+}
+
+function resetDeleteSelectionDialog(){
+	
+	// reset category select menu
+	$('#deleteSelectionDisplay').val('');
+	
+	// close the category selection dialog
+	$('#deleteSelectionDialog').dialog('close');
 	
 }

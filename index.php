@@ -96,6 +96,19 @@
       <input type="hidden" id="editSelectionElementID" value="">
     </div>
     
+    <div id="deleteSelectionDialog" title="Delete Selection" class="dialogWindow">
+    	<p>Are you sure you want to delete this selection?</p>
+      
+      <div id="deleteSelectionDisplay"></div><br>
+      
+      <input type="hidden" id="deleteSelectionElementID" value="">
+      
+      <p>
+      	<button id="deleteSelectionConfirmBtn">Yes, Delete It</button>
+        <button id="deleteSelectionCancelBtn">Cancel</button>
+      </p>
+    </div>
+    
     <?php include '/includes/footer-resources.php' ?>
   </body>
 </html>

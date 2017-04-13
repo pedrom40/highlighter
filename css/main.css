@@ -20,7 +20,7 @@ h1 {margin-bottom:50px; padding-bottom:8px; font-size:32px; color:#002642; borde
 #category4, .category4Highlight {background:#8a8fe8;}
 #category5, .category5Highlight {background:#c497ff;}
 
-#selectionsContainer dl {display:none; margin:15px 0; padding:15px;}
+#selectionsContainer dl {margin:15px 0; padding:15px;}
 	#selectionsContainer dl:first-child {margin-top:0;}
 	#selectionsContainer dl .categoryName {font-size:1.5em; font-weight:bold; padding-bottom:15px;}
 	#selectionsContainer dl .savedElements {margin-bottom:15px; padding:5px 0; border-bottom:dotted 1px black;}
