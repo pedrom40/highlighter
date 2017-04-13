@@ -83,6 +83,19 @@
       
     </div>
     
+    <div id="editSelectionDialog" title="Edit Selection" class="dialogWindow">
+    	<p>Edit your selection below:</p>
+      
+      <textarea id="editSelectionHolder"></textarea>
+      
+      <p>
+      	<button id="editSelectionSaveBtn">Save</button>
+        <button id="editSelectionCancelBtn">Cancel</button>
+      </p>
+      
+      <input type="hidden" id="editSelectionElementID" value="">
+    </div>
+    
     <?php include '/includes/footer-resources.php' ?>
   </body>
 </html>

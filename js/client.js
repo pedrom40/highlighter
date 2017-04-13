@@ -14,7 +14,8 @@ $(document).ready(function(e) {
 		
 	});
 	
-	// init dialog windows
+	
+	// dialog windows
 	$('#categorySelectionDialog').dialog({
 		autoOpen:false,
 		show: {
@@ -25,6 +26,38 @@ $(document).ready(function(e) {
 			effect: "fadeOut",
 			duration: 500
 		}
+	});
+	$('#editSelectionDialog').dialog({
+		autoOpen:false,
+		show: {
+			effect: "fadeIn",
+			duration: 500
+		},
+		hide: {
+			effect: "fadeOut",
+			duration: 500
+		}
+	});
+	
+	
+	// edit selection dialog functions
+	$('#editSelectionSaveBtn').click(function(e) {
+    saveEditedSelection();
+  });
+	
+	$('#editSelectionCancelBtn').click(function(e) {
+    $('#editSelectionDialog').dialog('close');
+  });
+	
+	
+	// listener for edit element btn clicks
+	$('#selectionsContainer dl').on('click', 'a.selectionEditBtn.ui-button.ui-widget.ui-corner-all.ui-button-icon-only', function(){
+    editSelection(this.id);
+	});
+	
+	// listener for delete element btn clicks
+	$('#selectionsContainer dl').on('click', 'a.selectionDeleteBtn.ui-button.ui-widget.ui-corner-all.ui-button-icon-only', function(){
+    deleteSelection(this.id);
 	});
 	
 });
@@ -143,35 +176,113 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 	
 	if (categoryIDToSaveItTo !== ''){
 		
+		// count elements in category list
+		var newElementID = calculateNextID(categoryIDToSaveItTo);
+		
+		// make clean ID reference
+		var createIDString = 'category'+categoryIDToSaveItTo+'_'+newElementID;
+		createIDString.toString();
+		
 		// push to corresponding list
-		$('#category'+categoryIDToSaveItTo).append('<dd>'+textToSave+'</dd>');
+		$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
+		$('#category'+categoryIDToSaveItTo).append(''+
+			'<dd class="buttons">'+
+				'<a id="'+createIDString+'_editBtn" class="selectionEditBtn ui-button ui-widget ui-corner-all ui-button-icon-only" title="Edit Selection"><span class="ui-icon ui-icon-pencil"></span> Edit Selection</a>'+
+				'<a id="'+createIDString+'_deleteBtn" class="selectionDeleteBtn ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Selection"><span class="ui-icon ui-icon-close"></span> Delete Selection</a>'+
+			'</dd>');
 		
 		// highlight selection with category color
-		hightlightSelection(textToSave, categoryIDToSaveItTo);
+		hightlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
 		
 		// show list
 		$('#category'+categoryIDToSaveItTo).fadeIn('fast');
 		
-		// reset category select menu
-		$('#categories').val('');
-		
-		// close the category selection dialog
-		$('#categorySelectionDialog').dialog('close');
+		// reset category selector
+		resetCategorySelectMenu();
 		
 	}
 	
 }
 
-function hightlightSelection(textToSave, categoryIDToSaveItTo){
+function calculateNextID(categoryID){
 	
-	var src_str = $("#cbContent").html();
+	var currentNumOfSelections = $('#category'+categoryID+' dd').length;
+	var nextElementNumber = 0;
+	
+	// step by 1
+	if (currentNumOfSelections == 0){
+		nextElementNumber = 1;
+	}
+	else {
+		nextElementNumber = Number(currentNumOfSelections) + 1;
+	}
+	
+	return nextElementNumber;
+	
+}
+
+function hightlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
+	
+	var src_str = $('#cbContent').html();
 	var term = textToSave;
-	term = term.replace(/(\s+)/,"(<[^>]+>)*$1(<[^>]+>)*");
+	term = term.replace(/(\s+)/,'(<[^>]+>)*$1(<[^>]+>)*');
 	var pattern = new RegExp("("+term+")", "gi");
 	
-	src_str = src_str.replace(pattern, "<mark class='category"+categoryIDToSaveItTo+"Highlight'>$1</mark>");
+	src_str = src_str.replace(pattern, '<mark id=category'+categoryIDToSaveItTo+'_'+elementNumber+' class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
 	src_str = src_str.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
 	
-	$("#cbContent").html(src_str);
+	$('#cbContent').html(src_str);
+	
+}
+
+function resetCategorySelectMenu(){
+	
+	// reset category select menu
+	$('#categories').val('');
+	
+	// close the category selection dialog
+	$('#categorySelectionDialog').dialog('close');
+	
+}
+
+function editSelection(elementID){
+	
+	// open category selection dialog
+	$('#editSelectionDialog').dialog('open');
+	
+	// remove btn identifier
+	var cleanElementID = elementID.replace("_editBtn", "");
+	
+	// set selection in window for reference
+	$('#editSelectionHolder').val($('dd#'+cleanElementID).html());
+	
+	// set id
+	$('#editSelectionElementID').val(cleanElementID);
+	
+}
+
+function saveEditedSelection(){
+	
+	// update list item
+	var elementID = $('#editSelectionElementID').val();
+	$('dd#'+elementID).html($('#editSelectionHolder').val());
+	
+	// reset edit selection dialog
+	resetEditSelectionDialog();
+	
+}
+
+function deleteSelection(elementID){
+	alert('Delete '+elementID);
+}
+
+function resetEditSelectionDialog(){
+	
+	// reset category select menu
+	$('#editSelectionHolder').val('');
+	$('#editSelectionElementID').val('');
+	
+	// close the category selection dialog
+	$('#editSelectionDialog').dialog('close');
 	
 }

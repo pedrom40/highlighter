@@ -23,6 +23,9 @@ h1 {margin-bottom:50px; padding-bottom:8px; font-size:32px; color:#002642; borde
 #selectionsContainer dl {display:none; margin:15px 0; padding:15px;}
 	#selectionsContainer dl:first-child {margin-top:0;}
 	#selectionsContainer dl .categoryName {font-size:1.5em; font-weight:bold; padding-bottom:15px;}
+	#selectionsContainer dl .savedElements {margin-bottom:15px; padding:5px 0; border-bottom:dotted 1px black;}
+	#selectionsContainer dl .buttons {margin-bottom:15px; text-align:right;}
+		#selectionsContainer dl .buttons button:first-child {margin-right:8px;}
 	
 /* dialogs */
 .dialogWindow {display:none;}
