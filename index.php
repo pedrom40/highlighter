@@ -47,11 +47,25 @@
         	
           <h1>Your Selections</h1>
           
-          <ul id="projectRequirements"></ul>
-          <ul id="drivingQuestion"></ul>
-          <ul id="know"></ul>
-          <ul id="needToKnow"></ul>
-          <ul id="unknownVocabularyWord"></ul>
+          <ul id="projectRequirements">
+          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
+          </ul>
+          
+          <ul id="drivingQuestion">
+          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
+          </ul>
+          
+          <ul id="know">
+          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
+          </ul>
+          
+          <ul id="needToKnow">
+          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
+          </ul>
+          
+          <ul id="unknownVocabularyWord">
+          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
+          </ul>
           
         </div>
       </div>

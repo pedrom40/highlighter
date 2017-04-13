@@ -12,3 +12,13 @@ h1 {margin-bottom:50px; padding-bottom:8px; font-size:32px; color:#002642; borde
 
 .row {overflow:hidden;}
 [class="content-panel"]{margin-bottom:-99999px; padding-bottom:99999px;}
+
+/* categories */
+#projectRequirements {background:#86e7e8;}
+#drivingQuestion {background:#98ffcc;}
+#know {background:#a5d4ff;}
+#needToKnow {background:#8a8fe8;}
+#unknownVocabularyWord {background:#c497ff;}
+
+#selectionsContainer ul {margin:15px 0;}
+	#selectionsContainer ul:first-child {margin-top:0;}

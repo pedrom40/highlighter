@@ -7,7 +7,7 @@ $(document).ready(function(e) {
 	
 	// for touch devices
 	.bind('touchend', function(e){
-  	var selectedText = getTextSelection();
+		var selectedText = getTextSelection();
 	});
 	
 });
@@ -48,7 +48,9 @@ function getTextSelection() {
 			sel.modify("extend", direction[1], "character");
 			sel.modify("extend", direction[0], "word");
 			
-			alert('!sel.isCollapsed - '+sel);
+			if (sel !== ''){
+				alert('categorize this text: '+sel);
+			}
 			
 		}
 		
@@ -70,19 +72,22 @@ function getTextSelection() {
 			
 			textRange.select();
 			
-			alert('textRange.text - '+sel);
+			if (sel !== ''){
+				alert('categorize this text: '+sel);
+			}
+			
 		}
 		
 	}
 	
 	// last IE alternative
 	else {
+		
 		sel = window.getSelection().toString();
 		
 		if (sel !== ''){
-			alert(sel);
+			alert('categorize this text: '+sel);
 		}
-		
 	}
 	
 }
