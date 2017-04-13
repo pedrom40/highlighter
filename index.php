@@ -5,13 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Unit 2: A New Nation (Cloned 2015-08-11) Challenge Brief | eStudio</title>
-    <link rel="shorcut icon" href="/img/favicon-engage.png">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/main.css">
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <?php include '/includes/header-resources.php' ?>
   </head>
   <body>
     
@@ -47,35 +41,48 @@
         	
           <h1>Your Selections</h1>
           
-          <ul id="projectRequirements">
-          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
-          </ul>
+          <dl id="category1">
+          	<dd class="categoryName">Project Requirements</dd>
+          </dl>
           
-          <ul id="drivingQuestion">
-          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
-          </ul>
+          <dl id="category2">
+          	<dd class="categoryName">Driving Question</dd>
+          </dl>
           
-          <ul id="know">
-          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
-          </ul>
+          <dl id="category3">
+          	<dd class="categoryName">Know</dd>
+          </dl>
           
-          <ul id="needToKnow">
-          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
-          </ul>
+          <dl id="category4">
+          	<dd class="categoryName">Need To Know</dd>
+          </dl>
           
-          <ul id="unknownVocabularyWord">
-          	<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo orci eu augue pulvinar volutpat.</li>
-          </ul>
+          <dl id="category5">
+          	<dd class="categoryName">Unknown / Vocabulary Word</dd>
+          </dl>
           
         </div>
       </div>
       
     </div>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="/js/client.js"></script>
+    <div id="categorySelectionDialog" title="Select a Category" class="dialogWindow">
+      <p>Choose a category to save the following selection:</p>
+      <div id="selectionDisplay"></div>
+      
+      <p>
+        <select id="categories" onChange="saveTextToCategory($('#selectionDisplay').html(), this.value);">
+          <option value="">Select a Category</option>
+          <option value="1">Project Requirements</option>
+          <option value="2">Driving Question</option>
+          <option value="3">Know</option>
+          <option value="4">Need To Know</option>
+          <option value="5">Unknown / Vocabulary Word</option>
+        </select>
+      </p>
+      
+    </div>
     
+    <?php include '/includes/footer-resources.php' ?>
   </body>
 </html>

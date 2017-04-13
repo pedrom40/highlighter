@@ -14,11 +14,16 @@ h1 {margin-bottom:50px; padding-bottom:8px; font-size:32px; color:#002642; borde
 [class="content-panel"]{margin-bottom:-99999px; padding-bottom:99999px;}
 
 /* categories */
-#projectRequirements {background:#86e7e8;}
-#drivingQuestion {background:#98ffcc;}
-#know {background:#a5d4ff;}
-#needToKnow {background:#8a8fe8;}
-#unknownVocabularyWord {background:#c497ff;}
+#category1, .category1Highlight {background:#86e7e8;}
+#category2, .category2Highlight {background:#98ffcc;}
+#category3, .category3Highlight {background:#a5d4ff;}
+#category4, .category4Highlight {background:#8a8fe8;}
+#category5, .category5Highlight {background:#c497ff;}
 
-#selectionsContainer ul {margin:15px 0;}
-	#selectionsContainer ul:first-child {margin-top:0;}
+#selectionsContainer dl {display:none; margin:15px 0; padding:15px;}
+	#selectionsContainer dl:first-child {margin-top:0;}
+	#selectionsContainer dl .categoryName {font-size:1.5em; font-weight:bold; padding-bottom:15px;}
+	
+/* dialogs */
+.dialogWindow {display:none;}
+#selectionDisplay {margin:15px; font-style:italic;}
