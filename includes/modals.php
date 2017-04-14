@@ -10,7 +10,7 @@
         <div id="selectionDisplay"></div>
         
         <p>
-          <select id="categories" onChange="saveTextToCategory($('#selectionDisplay').html(), this.value);">
+          <select id="categories" class="form-control" onChange="saveTextToCategory($('#selectionDisplay').html(), this.value);">
             <option value="">Select a Category</option>
             <option value="1">Project Requirements</option>
             <option value="2">Driving Question</option>
@@ -36,7 +36,7 @@
       </div>
       <div class="modal-body">
         <p>Edit your selection below:</p>
-        <textarea id="editSelectionHolder"></textarea>
+        <textarea id="editSelectionHolder" class="form-control"></textarea>
         <input type="hidden" id="editSelectionElementID" value="">
       </div>
       <div class="modal-footer">

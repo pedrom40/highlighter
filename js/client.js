@@ -41,6 +41,41 @@ $(document).ready(function(e) {
     resetDeleteSelectionDialog();
   });
 	
+	// listener to toggle category list
+	$('.categoryName').click(function(e) {
+    
+		// get parent list element
+		var listElement = $(this).parent().attr('id');
+		
+		// loop thru list
+		$('#'+listElement+' dd').each(function(index, element) {
+      
+			// if this is a selection or buttons item and you can see it
+			if ($(this).css('display') !== 'none' && ($(this).attr('class') == 'savedElements' || $(this).attr('class') == 'buttons')){
+				
+				// hide it
+				$(this).css('display', 'none');
+				
+				// rotate chevron
+				$('#'+listElement+' .categoryName span').addClass('close');
+				
+			}
+			
+			// it not a selection or buttons item and/or it's hidden
+			else {
+				
+				// show it
+				$(this).css('display', 'block');
+				
+				// rotate chevron
+				$('#'+listElement+' .categoryName span').removeClass('close');
+				
+			}
+			
+    });
+		
+  });
+	
 });
 
 
@@ -164,6 +199,9 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 		var createIDString = 'category'+categoryIDToSaveItTo+'_'+newElementID;
 		createIDString.toString();
 		
+		// show selections container
+		$('#selectionsContainer').show('fast');
+		
 		// push to corresponding list
 		$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
 		$('#category'+categoryIDToSaveItTo).append(''+
@@ -175,10 +213,13 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 			'</dd>');
 		
 		// highlight selection with category color
-		hightlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
+		highlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
 		
-		// show list
-		$('#category'+categoryIDToSaveItTo).fadeIn('fast');
+		// activate list header
+		$('#category'+categoryIDToSaveItTo+' .categoryName').addClass('activated');
+		
+		// show toggle button on category header
+		$('#category'+categoryIDToSaveItTo+' dd span').show('fast');
 		
 		// reset category selector
 		resetCategorySelectMenu();
@@ -204,14 +245,14 @@ function calculateNextID(categoryID){
 	
 }
 
-function hightlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
+function highlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
 	
 	var src_str = $('#cbContent').html();
 	var term = textToSave;
 	term = term.replace(/(\s+)/,'(<[^>]+>)*$1(<[^>]+>)*');
 	var pattern = new RegExp("("+term+")", "gi");
 	
-	src_str = src_str.replace(pattern, '<mark id="category'+categoryIDToSaveItTo+'_'+elementNumber+'" class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
+	src_str = src_str.replace(pattern, '<mark id="mark_category'+categoryIDToSaveItTo+'_'+elementNumber+'" class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
 	src_str = src_str.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
 	
 	$('#cbContent').html(src_str);
@@ -277,7 +318,7 @@ function deleteSelection(){
 	var elementID = $('#deleteSelectionElementID').val();
 	
 	// remove highlight
-	deleteHightlightedSelection(elementID);
+	deleteHighlightedSelection(elementID);
 	
 	// destroy dd element
 	$('dd#'+elementID).remove();
@@ -285,16 +326,31 @@ function deleteSelection(){
 	// destroy dd buttons
 	$('dd#buttons_'+elementID).remove();
 	
+	// get the category list length
+	var splitElement = elementID.split('_');
+	var listLen = $('dl#'+splitElement[0]+' dd').length;
+	
+	// if only header element in the list is left
+	if (listLen <= 1){
+		
+		// hide chevron
+		$('dl#'+splitElement[0]+' .categoryName span').css('display', 'none');
+		
+		// deactivate header
+		$('dl#'+splitElement[0]+' .categoryName').removeClass('activated');
+		
+	}
+	
 	// close delete dialog
 	resetDeleteSelectionDialog();
 	
 }
 
-function deleteHightlightedSelection(elementID){
+function deleteHighlightedSelection(elementID){
 	
 	var element = $('#cbContent'); //convert string to JQuery element
 	
-	element.find('mark#'+elementID).each(function(index){
+	element.find('#mark_'+elementID).each(function(index){
     var text = $(this).text(); //get span content
     $(this).replaceWith(text); //replace all span with just content
 	});
