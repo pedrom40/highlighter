@@ -15,59 +15,23 @@ $(document).ready(function(e) {
 	});
 	
 	
-	// init dialog windows
-	$('#categorySelectionDialog').dialog({
-		autoOpen:false,
-		show: {
-			effect: "fadeIn",
-			duration: 500
-		},
-		hide: {
-			effect: "fadeOut",
-			duration: 500
-		}
-	});
-	$('#editSelectionDialog').dialog({
-		autoOpen:false,
-		show: {
-			effect: "fadeIn",
-			duration: 500
-		},
-		hide: {
-			effect: "fadeOut",
-			duration: 500
-		}
-	});
-	$('#deleteSelectionDialog').dialog({
-		autoOpen:false,
-		show: {
-			effect: "fadeIn",
-			duration: 500
-		},
-		hide: {
-			effect: "fadeOut",
-			duration: 500
-		}
-	});
-	
-	
 	// edit selection dialog functions
 	$('#editSelectionSaveBtn').click(function(e) {
     saveEditedSelection();
   });
 	
 	$('#editSelectionCancelBtn').click(function(e) {
-    $('#editSelectionDialog').dialog('close');
+		$('#editSelectionDialog').modal('hide');
   });
 	
 	
 	// listener for edit element btn clicks
-	$('#selectionsContainer dl').on('click', 'a.selectionEditBtn.ui-button.ui-widget.ui-corner-all.ui-button-icon-only', function(){
+	$('#selectionsContainer dl').on('click', 'button.selectionEditBtn.btn.btn-default', function(){
     editSelection(this.id);
 	});
 	
 	// listener for delete element btn clicks
-	$('#selectionsContainer dl').on('click', 'a.selectionDeleteBtn.ui-button.ui-widget.ui-corner-all.ui-button-icon-only', function(){
+	$('#selectionsContainer dl').on('click', 'button.selectionDeleteBtn.btn.btn-default', function(){
     deleteSelectionConfirm(this.id);
 	});
 	$('#deleteSelectionConfirmBtn').click(function(e) {
@@ -182,7 +146,7 @@ function textHasBeenSelected(selection){
 function categorizeText(selection){
 	
 	// open category selection dialog
-	$('#categorySelectionDialog').dialog('open');
+	$('#categorySelectionDialog').modal('show');
 	
 	// set selection in window for reference
 	$('#selectionDisplay').html(selection);
@@ -204,8 +168,10 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 		$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
 		$('#category'+categoryIDToSaveItTo).append(''+
 			'<dd id="buttons_'+createIDString+'" class="buttons">'+
-				'<a id="'+createIDString+'_editBtn" class="selectionEditBtn ui-button ui-widget ui-corner-all ui-button-icon-only" title="Edit Selection"><span class="ui-icon ui-icon-pencil"></span> Edit Selection</a>'+
-				'<a id="'+createIDString+'_deleteBtn" class="selectionDeleteBtn ui-button ui-widget ui-corner-all ui-button-icon-only" title="Delete Selection"><span class="ui-icon ui-icon-close"></span> Delete Selection</a>'+
+				'<div class="btn-group btn-group-xs" role="group" aria-label="selectionBtns">'+
+					'<button id="'+createIDString+'_editBtn" type="button" class="selectionEditBtn btn btn-default" title="Edit Selection"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
+					'<button id="'+createIDString+'_deleteBtn" type="button" class="selectionDeleteBtn btn btn-default" title="Delete Selection"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>'+
+				'</div>'+
 			'</dd>');
 		
 		// highlight selection with category color
@@ -258,14 +224,14 @@ function resetCategorySelectMenu(){
 	$('#categories').val('');
 	
 	// close the category selection dialog
-	$('#categorySelectionDialog').dialog('close');
+	$('#categorySelectionDialog').modal('hide');
 	
 }
 
 function editSelection(elementID){
 	
 	// open category selection dialog
-	$('#editSelectionDialog').dialog('open');
+	$('#editSelectionDialog').modal('show');
 	
 	// remove btn identifier
 	var cleanElementID = elementID.replace("_editBtn", "");
@@ -292,7 +258,7 @@ function saveEditedSelection(){
 function deleteSelectionConfirm(elementID){
 	
 	// open category selection dialog
-	$('#deleteSelectionDialog').dialog('open');
+	$('#deleteSelectionDialog').modal('show');
 	
 	// remove btn identifier
 	var cleanElementID = elementID.replace("_deleteBtn", "");
@@ -344,7 +310,7 @@ function resetEditSelectionDialog(){
 	$('#editSelectionElementID').val('');
 	
 	// close the category selection dialog
-	$('#editSelectionDialog').dialog('close');
+	$('#editSelectionDialog').modal('hide');
 	
 }
 
@@ -354,6 +320,6 @@ function resetDeleteSelectionDialog(){
 	$('#deleteSelectionDisplay').val('');
 	
 	// close the category selection dialog
-	$('#deleteSelectionDialog').dialog('close');
+	$('#deleteSelectionDialog').modal('hide');
 	
 }

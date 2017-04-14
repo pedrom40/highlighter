@@ -40,74 +40,14 @@
         <div class="content-panel">
         	
           <h1>Your Selections</h1>
-          
-          <dl id="category1">
-          	<dd class="categoryName">Project Requirements</dd>
-          </dl>
-          
-          <dl id="category2">
-          	<dd class="categoryName">Driving Question</dd>
-          </dl>
-          
-          <dl id="category3">
-          	<dd class="categoryName">Know</dd>
-          </dl>
-          
-          <dl id="category4">
-          	<dd class="categoryName">Need To Know</dd>
-          </dl>
-          
-          <dl id="category5">
-          	<dd class="categoryName">Unknown / Vocabulary Word</dd>
-          </dl>
+          <?php include '/includes/category-lists.php' ?>
           
         </div>
       </div>
       
     </div>
     
-    <div id="categorySelectionDialog" title="Select a Category" class="dialogWindow">
-      <p>Choose a category to save the following selection:</p>
-      <div id="selectionDisplay"></div>
-      
-      <p>
-        <select id="categories" onChange="saveTextToCategory($('#selectionDisplay').html(), this.value);">
-          <option value="">Select a Category</option>
-          <option value="1">Project Requirements</option>
-          <option value="2">Driving Question</option>
-          <option value="3">Know</option>
-          <option value="4">Need To Know</option>
-          <option value="5">Unknown / Vocabulary Word</option>
-        </select>
-      </p>
-      
-    </div>
-    
-    <div id="editSelectionDialog" title="Edit Selection" class="dialogWindow">
-    	<p>Edit your selection below:</p>
-      
-      <textarea id="editSelectionHolder"></textarea>
-      
-      <p>
-      	<button id="editSelectionSaveBtn">Save</button>
-        <button id="editSelectionCancelBtn">Cancel</button>
-      </p>
-      
-      <input type="hidden" id="editSelectionElementID" value="">
-    </div>
-    
-    <div id="deleteSelectionDialog" title="Delete Selection" class="dialogWindow">
-    	<p>Are you sure you want to delete this selection?</p>
-      
-      <div id="deleteSelectionDisplay"></div><br>
-      
-      <input type="hidden" id="deleteSelectionElementID" value="">
-      
-      <p>
-      	<button id="deleteSelectionConfirmBtn">Yes, Delete It</button>
-        <button id="deleteSelectionCancelBtn">Cancel</button>
-      </p>
-    </div>
+    <?php include '/includes/modals.php' ?>
     
     <?php include '/includes/footer-resources.php' ?>
   </body>
