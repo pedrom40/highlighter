@@ -1,21 +1,16 @@
 <?php
 	
-	$servername = "mysql21.ezhostingserver.com";
-	$username 	= "e2l_user";
-	$password 	= "N@tPr1nT";
-	$dbname 		= "e2l";
+	require '/includes/db-connection.php';
 	
-	// Create connection
-	$conn = new mysqli($servername, $username, $password);
-	
-	// Check connection
-	if ($conn->connect_error){
-		die("Connection failed: " . $conn->connect_error);
-	} 
-	
-	// get challenge brief
-	$sql = "SELECT * FROM e2l.challenge_briefs WHERE id = 1 AND active = 1";
+	// get challenge brief content
+	$sql 		= "SELECT id, title, content FROM e2l.challenge_briefs WHERE id = 1";
 	$result = $conn->query($sql);
+	
+	// get challenge brief categories
+	$sql 		= "SELECT * FROM e2l.challenge_briefs_categories ORDER BY rank";
+	$categories = $conn->query($sql);
+	
+	$conn->close();
 	
 ?>
 <!DOCTYPE html>
@@ -30,6 +25,7 @@
   <body>
     
     <div class="row">
+      <div id="alertContainer" class="alert alert-danger"></div>
       
       <div class="col-lg-9">
         <div id="cbContent" class="content-panel">
@@ -42,6 +38,8 @@
 								
 								echo "<h1>".$row["title"]."</h1>";
 								echo $row["content"];
+								echo '<input type="hidden" id="cbID" value="'.$row["id"].'">';
+								
 							}
 							
 						}

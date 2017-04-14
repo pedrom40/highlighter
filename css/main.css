@@ -5,7 +5,7 @@ h1 {margin-bottom:50px; padding-bottom:8px; font-size:32px; color:#002642; borde
 
 /* CB content */
 .content-panel {position:relative; padding:30px; border:1px solid #ddd; box-shadow:0px 1px 1px rgba(0,0,0,.1); background-color:white;}
-
+#alertContainer {display:none;}
 
 /* holding box */
 #selectionsContainer {}

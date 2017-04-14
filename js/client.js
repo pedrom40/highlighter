@@ -192,37 +192,61 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 	
 	if (categoryIDToSaveItTo !== ''){
 		
-		// count elements in category list
-		var newElementID = calculateNextID(categoryIDToSaveItTo);
+		// post to DB
+		$.ajax({
+			method:"POST",
+			url:"saveSelection.php",
+			data: {student_id:1, cb_id:$('#cbID').val(), category_id:categoryIDToSaveItTo, selection_content:textToSave}
+		})
 		
-		// make clean ID reference
-		var createIDString = 'category'+categoryIDToSaveItTo+'_'+newElementID;
-		createIDString.toString();
+		// on successful post
+		.done(function(msg) {
+			
+			// count elements in category list
+			var newElementID = calculateNextID(categoryIDToSaveItTo);
+			
+			// make clean ID reference
+			var createIDString = 'category'+categoryIDToSaveItTo+'_'+newElementID;
+			createIDString.toString();
+			
+			// show selections container
+			$('#selectionsContainer').show('fast');
+			
+			// push to corresponding list
+			$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
+			$('#category'+categoryIDToSaveItTo).append(''+
+				'<dd id="buttons_'+createIDString+'" class="buttons">'+
+					'<div class="btn-group btn-group-xs" role="group" aria-label="selectionBtns">'+
+						'<button id="'+createIDString+'_editBtn" type="button" class="selectionEditBtn btn btn-default" title="Edit Selection"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
+						'<button id="'+createIDString+'_deleteBtn" type="button" class="selectionDeleteBtn btn btn-default" title="Delete Selection"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>'+
+					'</div>'+
+				'</dd>');
+			
+			// highlight selection with category color
+			highlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
+			
+			// activate list header
+			$('#category'+categoryIDToSaveItTo+' .categoryName').addClass('activated');
+			
+			// show toggle button on category header
+			$('#category'+categoryIDToSaveItTo+' dd span').show('fast');
+			
+			// reset category selector
+			resetCategorySelectMenu();
+			
+		})
 		
-		// show selections container
-		$('#selectionsContainer').show('fast');
-		
-		// push to corresponding list
-		$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
-		$('#category'+categoryIDToSaveItTo).append(''+
-			'<dd id="buttons_'+createIDString+'" class="buttons">'+
-				'<div class="btn-group btn-group-xs" role="group" aria-label="selectionBtns">'+
-					'<button id="'+createIDString+'_editBtn" type="button" class="selectionEditBtn btn btn-default" title="Edit Selection"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
-					'<button id="'+createIDString+'_deleteBtn" type="button" class="selectionDeleteBtn btn btn-default" title="Delete Selection"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>'+
-				'</div>'+
-			'</dd>');
-		
-		// highlight selection with category color
-		highlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
-		
-		// activate list header
-		$('#category'+categoryIDToSaveItTo+' .categoryName').addClass('activated');
-		
-		// show toggle button on category header
-		$('#category'+categoryIDToSaveItTo+' dd span').show('fast');
-		
-		// reset category selector
-		resetCategorySelectMenu();
+		// on error
+		.error(function(jqXHR, textStatus, errorThrown){
+			
+			// create error string
+			var error_string = '<h3>Error Occurred:</h3> <p>' + textStatus + ' ' + errorThrown + '</p>';
+			
+			// display error string
+			$('#alertContainer').html(error_string);
+			$('#alertContainer').show();
+			
+		});
 		
 	}
 	
