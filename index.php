@@ -10,7 +10,8 @@
   <body>
     
     <div class="row">
-    	<div class="col-md-9">
+      
+      <div class="col-lg-9">
         <div id="cbContent" class="content-panel">
           <h1>"Unit 2: A New Nation (Cloned 2015-08-11)" | Challenge Brief</h1>
           
@@ -38,7 +39,7 @@
       
       <div id="selectionsContainer" class="col-lg-3">
         <div class="content-panel">
-        	
+          
           <h1>Your Selections</h1>
           <?php include '/includes/category-lists.php' ?>
           

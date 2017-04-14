@@ -8,7 +8,7 @@ $(document).ready(function(e) {
 	})
 	
 	// for touch devices
-	.bind('touchend', function(e){
+	.bind('ontouchend', function(e){
 		
 		callSelectionFunctions();
 		

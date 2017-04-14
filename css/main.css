@@ -32,3 +32,10 @@ h1 {margin-bottom:50px; padding-bottom:8px; font-size:32px; color:#002642; borde
 /* dialogs */
 .dialogWindow {display:none;}
 #selectionDisplay {margin:15px; font-style:italic;}
+
+/* mobile */
+@media screen and (max-width:767px) {
+  
+	body {margin:0; padding:0;}
+	
+}
