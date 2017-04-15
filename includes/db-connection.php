@@ -1,5 +1,6 @@
 <?php
 	
+	// db access vars
 	$hostname = "mysql21.ezhostingserver.com";
 	$username = "e2l_user";
 	$password = "N@tPr1nT";

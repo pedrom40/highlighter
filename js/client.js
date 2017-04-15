@@ -192,21 +192,24 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 	
 	if (categoryIDToSaveItTo !== ''){
 		
+		// get selected category
+		var cbID = $('#cbID').val();
+		
+		// get student id
+		var studentID = $('#studentID').val();
+		
 		// post to DB
 		$.ajax({
 			method:"POST",
-			url:"insertSelection.php",
-			data: {student_id:1, cb_id:$('#cbID').val(), category_id:categoryIDToSaveItTo, selection_content:textToSave}
+			url:"db-actions.php",
+			data: {action:'insert', student_id:studentID, cb_id:cbID, category_id:categoryIDToSaveItTo, selection_content:textToSave}
 		})
 		
 		// on successful post
-		.done(function(msg) {
-			
-			// count elements in category list
-			var newElementID = calculateNextID(categoryIDToSaveItTo);
+		.done(function(newRecordID) {
 			
 			// make clean ID reference
-			var createIDString = 'category'+categoryIDToSaveItTo+'_'+newElementID;
+			var createIDString = 'category'+categoryIDToSaveItTo+'_'+newRecordID;
 			createIDString.toString();
 			
 			// show selections container
@@ -216,7 +219,7 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 			createNewListItem(categoryIDToSaveItTo, createIDString, textToSave);
 			
 			// highlight selection with category color
-			highlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
+			highlightSelection(textToSave, categoryIDToSaveItTo, createIDString);
 			
 			// activate list header
 			$('#category'+categoryIDToSaveItTo+' .categoryName').addClass('activated');
@@ -258,23 +261,6 @@ function createNewListItem(categoryID, elementID, selectionText){
 		
 }
 
-function calculateNextID(categoryID){
-	
-	var currentNumOfSelections = $('#category'+categoryID+' dd').length;
-	var nextElementNumber = 0;
-	
-	// step by 1
-	if (currentNumOfSelections == 0){
-		nextElementNumber = 1;
-	}
-	else {
-		nextElementNumber = Number(currentNumOfSelections) + 1;
-	}
-	
-	return nextElementNumber;
-	
-}
-
 function highlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
 	
 	var src_str = $('#cbContent').html();
@@ -282,7 +268,7 @@ function highlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
 	term = term.replace(/(\s+)/,'(<[^>]+>)*$1(<[^>]+>)*');
 	var pattern = new RegExp("("+term+")", "gi");
 	
-	src_str = src_str.replace(pattern, '<mark id="mark_category'+categoryIDToSaveItTo+'_'+elementNumber+'" class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
+	src_str = src_str.replace(pattern, '<mark id="mark_'+elementNumber+'" class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
 	src_str = src_str.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
 	
 	$('#cbContent').html(src_str);
@@ -313,9 +299,13 @@ function editSelection(elementID){
 	// set id
 	$('#editSelectionElementID').val(cleanElementID);
 	
+	// set record ID
+	var recordID = cleanElementID.split('_');
+	$('#editRecordID').val(recordID[1]);
+	
 	// set categoryEdit selection
 	var categoryID = getCategoryID(cleanElementID);
-	$('#categoriesEdit').val(categoryID);
+	$('#editCategoryID').val(categoryID);
 	
 }
 
@@ -332,38 +322,75 @@ function getCategoryID(elementToSearch){ // from element like this: category2_2 
 
 function saveEditedSelection(){
 	
-	// get element ID
-	var elementID = $('#editSelectionElementID').val();
-	
-	// update list item
-	var updatedSelectionText = $('#editSelectionHolder').val();
-	$('dd#'+elementID).html(updatedSelectionText);
-	
+	// get record id
+	var recordID = $('#editRecordID').val();
 	
 	// get selected category
-	var selectedCategory = $('#categoriesEdit').val();
+	var cbID = $('#cbID').val();
 	
-	// if category changed
-	if (elementID.startsWith('category'+selectedCategory)){
-		
-		// count elements in category list
-		var newElementID = calculateNextID(selectedCategory);
-		
-		// make clean ID reference
-		var createIDString = 'category'+selectedCategory+'_'+newElementID;
-		createIDString.toString();
-		
-		// add it to new category list
-		createNewListItem(selectedCategory, createIDString, updatedSelectionText);
-		
-		// remove selection from old category list
-		$('dd#'+elementID).remove();
-		$('dd#buttons_'+elementID).remove();
-		
-	}
+	// get student id
+	var studentID = $('#studentID').val();
 	
-	// reset edit selection dialog
-	resetEditSelectionDialog();
+	// get selected category
+	var selectedCategory = $('#editCategoryID').val();
+	
+	// get updated selection text
+	var updatedSelectionText = $('#editSelectionHolder').val();
+	
+	// post to DB
+	$.ajax({
+		method:"POST",
+		url:"db-actions.php",
+		data: {action:'update', record_id:recordID, student_id:studentID, cb_id:cbID, category_id:selectedCategory, selection_content:updatedSelectionText}
+	})
+	
+	// on successful post
+	.done(function(recordID) {
+		
+		// get element ID
+		var elementID = $('#editSelectionElementID').val();
+		
+		// update list item
+		$('dd#'+elementID).html(updatedSelectionText);
+		
+		// if category changed
+		if (elementID.startsWith('category'+selectedCategory) == false){
+			
+			// delete old highlight
+			deleteHighlightedSelection(elementID);
+			
+			// make clean ID reference
+			var createIDString = 'category'+selectedCategory+'_'+recordID;
+			createIDString.toString();
+			
+			// add it to new category list
+			createNewListItem(selectedCategory, createIDString, updatedSelectionText);
+			
+			// remove selection from old category list
+			$('dd#'+elementID).remove();
+			$('dd#buttons_'+elementID).remove();
+			
+			// highlight new element
+			highlightSelection(updatedSelectionText, selectedCategory, createIDString);
+			
+		}
+		
+		// reset edit selection dialog
+		resetEditSelectionDialog();
+		
+	})
+	
+	// on error
+	.error(function(jqXHR, textStatus, errorThrown){
+		
+		// create error string
+		var error_string = '<h3>Error Occurred:</h3> <p>' + textStatus + ' ' + errorThrown + '</p>';
+		
+		// display error string
+		$('#alertContainer').html(error_string);
+		$('#alertContainer').show();
+		
+	});
 	
 }
 
@@ -435,6 +462,7 @@ function resetEditSelectionDialog(){
 	// reset category select menu
 	$('#editSelectionHolder').val('');
 	$('#editSelectionElementID').val('');
+	$('#editRecordID').val('');
 	
 	// close the category selection dialog
 	$('#editSelectionDialog').modal('hide');

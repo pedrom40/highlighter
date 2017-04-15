@@ -7,7 +7,7 @@
 	$result = $conn->query($sql);
 	
 	// get challenge brief categories
-	$sql = "SELECT * FROM e2l.challenge_briefs_categories ORDER BY rank";
+	$sql = "SELECT id, category_name, bg_color FROM e2l.challenge_briefs_categories ORDER BY rank";
 	$categories1 = $conn->query($sql); // not sure why I can't just reuse same variable, need more PHP knowledge
 	$categories2 = $conn->query($sql);
 	$categories3 = $conn->query($sql);
@@ -41,6 +41,7 @@
 								echo "<h1>".$row["title"]."</h1>";
 								echo $row["content"];
 								echo '<input type="hidden" id="cbID" value="'.$row["id"].'">';
+								echo '<input type="hidden" id="studentID" value="1">';
 								
 							}
 							

@@ -41,7 +41,7 @@
         <p>Edit your selection below:</p>
         
         <p>
-          <select id="categoriesEdit" class="form-control">
+          <select id="editCategoryID" class="form-control">
             <?php
               
               while($row = $categories3->fetch_assoc()) {
@@ -54,6 +54,7 @@
         
         <textarea id="editSelectionHolder" class="form-control"></textarea>
         <input type="hidden" id="editSelectionElementID" value="">
+        <input type="hidden" id="editRecordID" value="">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="editSelectionSaveBtn">Save</button>
