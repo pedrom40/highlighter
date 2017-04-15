@@ -195,7 +195,7 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 		// post to DB
 		$.ajax({
 			method:"POST",
-			url:"saveSelection.php",
+			url:"insertSelection.php",
 			data: {student_id:1, cb_id:$('#cbID').val(), category_id:categoryIDToSaveItTo, selection_content:textToSave}
 		})
 		
@@ -213,14 +213,7 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 			$('#selectionsContainer').show('fast');
 			
 			// push to corresponding list
-			$('#category'+categoryIDToSaveItTo).append('<dd id="'+createIDString+'" class="savedElements">'+textToSave+'</dd>');
-			$('#category'+categoryIDToSaveItTo).append(''+
-				'<dd id="buttons_'+createIDString+'" class="buttons">'+
-					'<div class="btn-group btn-group-xs" role="group" aria-label="selectionBtns">'+
-						'<button id="'+createIDString+'_editBtn" type="button" class="selectionEditBtn btn btn-default" title="Edit Selection"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
-						'<button id="'+createIDString+'_deleteBtn" type="button" class="selectionDeleteBtn btn btn-default" title="Delete Selection"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>'+
-					'</div>'+
-				'</dd>');
+			createNewListItem(categoryIDToSaveItTo, createIDString, textToSave);
 			
 			// highlight selection with category color
 			highlightSelection(textToSave, categoryIDToSaveItTo, newElementID);
@@ -250,6 +243,19 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 		
 	}
 	
+}
+
+function createNewListItem(categoryID, elementID, selectionText){
+	
+	$('#category'+categoryID).append('<dd id="'+elementID+'" class="savedElements">'+selectionText+'</dd>');
+	$('#category'+categoryID).append(''+
+		'<dd id="buttons_'+elementID+'" class="buttons">'+
+			'<div class="btn-group btn-group-xs" role="group" aria-label="selectionBtns">'+
+				'<button id="'+elementID+'_editBtn" type="button" class="selectionEditBtn btn btn-default" title="Edit Selection"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>'+
+				'<button id="'+elementID+'_deleteBtn" type="button" class="selectionDeleteBtn btn btn-default" title="Delete Selection"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>'+
+			'</div>'+
+		'</dd>');
+		
 }
 
 function calculateNextID(categoryID){
@@ -307,13 +313,54 @@ function editSelection(elementID){
 	// set id
 	$('#editSelectionElementID').val(cleanElementID);
 	
+	// set categoryEdit selection
+	var categoryID = getCategoryID(cleanElementID);
+	$('#categoriesEdit').val(categoryID);
+	
+}
+
+function getCategoryID(elementToSearch){ // from element like this: category2_2 (returns the number after 'category')
+	
+	var splitElement = elementToSearch.split('_');
+	var elementLength = splitElement[0].length;
+	elementLength = elementLength-1;
+	var categoryID = splitElement[0].charAt(elementLength);
+	
+	return categoryID;
+	
 }
 
 function saveEditedSelection(){
 	
-	// update list item
+	// get element ID
 	var elementID = $('#editSelectionElementID').val();
-	$('dd#'+elementID).html($('#editSelectionHolder').val());
+	
+	// update list item
+	var updatedSelectionText = $('#editSelectionHolder').val();
+	$('dd#'+elementID).html(updatedSelectionText);
+	
+	
+	// get selected category
+	var selectedCategory = $('#categoriesEdit').val();
+	
+	// if category changed
+	if (elementID.startsWith('category'+selectedCategory)){
+		
+		// count elements in category list
+		var newElementID = calculateNextID(selectedCategory);
+		
+		// make clean ID reference
+		var createIDString = 'category'+selectedCategory+'_'+newElementID;
+		createIDString.toString();
+		
+		// add it to new category list
+		createNewListItem(selectedCategory, createIDString, updatedSelectionText);
+		
+		// remove selection from old category list
+		$('dd#'+elementID).remove();
+		$('dd#buttons_'+elementID).remove();
+		
+	}
 	
 	// reset edit selection dialog
 	resetEditSelectionDialog();

@@ -12,11 +12,14 @@
         <p>
           <select id="categories" class="form-control" onChange="saveTextToCategory($('#selectionDisplay').html(), this.value);">
             <option value="">Select a Category</option>
-            <option value="1">Project Requirements</option>
-            <option value="2">Driving Question</option>
-            <option value="3">Know</option>
-            <option value="4">Need To Know</option>
-            <option value="5">Unknown / Vocabulary Word</option>
+            <?php
+							
+							// loop thru cats
+							while($row = $categories2->fetch_assoc()) {
+								echo '<option value="'.$row["id"].'">'.$row["category_name"].'</option>';
+							}
+							
+						?>
           </select>
         </p>
       </div>
@@ -36,6 +39,19 @@
       </div>
       <div class="modal-body">
         <p>Edit your selection below:</p>
+        
+        <p>
+          <select id="categoriesEdit" class="form-control">
+            <?php
+              
+              while($row = $categories3->fetch_assoc()) {
+                echo '<option value="'.$row["id"].'">'.$row["category_name"].'</option>';
+              }
+              
+            ?>
+          </select>
+        </p>
+        
         <textarea id="editSelectionHolder" class="form-control"></textarea>
         <input type="hidden" id="editSelectionElementID" value="">
       </div>

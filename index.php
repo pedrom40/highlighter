@@ -3,12 +3,14 @@
 	require '/includes/db-connection.php';
 	
 	// get challenge brief content
-	$sql 		= "SELECT id, title, content FROM e2l.challenge_briefs WHERE id = 1";
+	$sql = "SELECT id, title, content FROM e2l.challenge_briefs WHERE id = 1";
 	$result = $conn->query($sql);
 	
 	// get challenge brief categories
-	$sql 		= "SELECT * FROM e2l.challenge_briefs_categories ORDER BY rank";
-	$categories = $conn->query($sql);
+	$sql = "SELECT * FROM e2l.challenge_briefs_categories ORDER BY rank";
+	$categories1 = $conn->query($sql); // not sure why I can't just reuse same variable, need more PHP knowledge
+	$categories2 = $conn->query($sql);
+	$categories3 = $conn->query($sql);
 	
 	$conn->close();
 	
