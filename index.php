@@ -13,7 +13,7 @@
 	$categories3 = $conn->query($sql);
 	
 	// get student highlights for this challenge brief
-	$sql =  "SELECT id, category_id, selection_content ".
+	$sql =  "SELECT id, category_id, selection_content, selection_content_edited ".
 					"FROM e2l.challenge_briefs_student_selections ".
 					"WHERE cb_id = 1 ".
 						"AND student_id = 1";

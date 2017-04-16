@@ -6,7 +6,7 @@
 		<?php
 			if ($studentSelections->num_rows > 0) {
 				while($row = $studentSelections->fetch_assoc()) {
-					echo "loadSelections(".$row["id"].", ".$row["category_id"].", '".$row["selection_content"]."');";
+					echo "loadSelections(".$row["id"].", ".$row["category_id"].", '".$row["selection_content"]."', '".$row["selection_content_edited"]."');";
 				}
 			}
 		?>

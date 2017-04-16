@@ -53,6 +53,7 @@
         </p>
         
         <textarea id="editSelectionHolder" class="form-control"></textarea>
+        <input type="hidden" id="editSelectionHolderOriginal" value="">
         <input type="hidden" id="editSelectionElementID" value="">
         <input type="hidden" id="editRecordID" value="">
       </div>

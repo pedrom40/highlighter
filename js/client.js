@@ -22,6 +22,7 @@ $(document).ready(function(e) {
 	
 	$('#editSelectionCancelBtn').click(function(e) {
 		$('#editSelectionDialog').modal('hide');
+		resetEditSelectionDialog();
   });
 	
 	
@@ -103,7 +104,9 @@ function getTextSelection() {
 	if (window.getSelection && (textSelection = window.getSelection()).modify){
 		
 		textSelection = window.getSelection();
-		if (!textSelection.isCollapsed){
+		//textSelection = textSelection.toString().replace(/  /g,' ');
+		
+		/*if (!textSelection.isCollapsed){
 			
 			// Detect if selection is backwards
 			var range = document.createRange();
@@ -131,7 +134,7 @@ function getTextSelection() {
 			textSelection.modify("extend", direction[1], "character");
 			textSelection.modify("extend", direction[0], "word");
 			
-		}
+		}*/
 		
 	}
 	
@@ -304,6 +307,33 @@ function editSelection(elementID){
 	var categoryID = getCategoryID(cleanElementID);
 	$('#editCategoryID').val(categoryID);
 	
+	// get original selection text
+	$.ajax({
+		method:"POST",
+		url:"db-actions.php",
+		data: {action:'getOriginalText', record_id:recordID[1]}
+	})
+	
+	// on successful post
+	.done(function(originalText) {
+		
+		// set original text
+		$('#editSelectionHolderOriginal').val(originalText);
+		
+	})
+	
+	// on error
+	.error(function(jqXHR, textStatus, errorThrown){
+		
+		// create error string
+		var error_string = '<h3>Error Occurred:</h3> <p>' + textStatus + ' ' + errorThrown + '</p>';
+		
+		// display error string
+		$('#alertContainer').html(error_string);
+		$('#alertContainer').show();
+		
+	});
+	
 }
 
 function getCategoryID(elementToSearch){ // from element like this: category2_2 (returns the number after 'category')
@@ -338,6 +368,9 @@ function saveEditedSelection(){
 	// get selected category
 	var selectedCategory = $('#editCategoryID').val();
 	
+	// get original selection text
+	var originalSelectionText = $('#editSelectionHolderOriginal').val();
+	
 	// get updated selection text
 	var updatedSelectionText = $('#editSelectionHolder').val();
 	
@@ -345,7 +378,7 @@ function saveEditedSelection(){
 	$.ajax({
 		method:"POST",
 		url:"db-actions.php",
-		data: {action:'update', record_id:recordID, student_id:studentID, cb_id:cbID, category_id:selectedCategory, selection_content:updatedSelectionText}
+		data: {action:'update', record_id:recordID, category_id:selectedCategory, selection_content:originalSelectionText, selection_content_edited:updatedSelectionText}
 	})
 	
 	// on successful post
@@ -379,7 +412,7 @@ function saveEditedSelection(){
 			$('dd#buttons_'+elementID).remove();
 			
 			// highlight new element
-			highlightSelection(updatedSelectionText, selectedCategory, createIDString);
+			highlightSelection(originalSelectionText, selectedCategory, createIDString);
 			
 		}
 		
@@ -464,6 +497,9 @@ function deleteSelection(){
 			
 		}
 		
+		// remove highlight (run twice incase there was more than one highlight)
+		deleteHighlightedSelection(elementID);
+		
 		// close delete dialog
 		resetDeleteSelectionDialog();
 		
@@ -499,6 +535,7 @@ function deleteHighlightedSelection(elementID){
 function resetEditSelectionDialog(){
 	
 	// reset category select menu
+	$('#editSelectionHolderOriginal').val('');
 	$('#editSelectionHolder').val('');
 	$('#editSelectionElementID').val('');
 	$('#editRecordID').val('');
@@ -521,14 +558,14 @@ function resetDeleteSelectionDialog(){
 	
 }
 
-function loadSelections(recordID, selectionCategory, textToSelect){
+function loadSelections(recordID, selectionCategory, textToSelect, editedTextToShow){
 	
 	// make clean ID reference
 	var createIDString = 'category'+selectionCategory+'_'+recordID;
 	createIDString.toString();
 	
 	// push to corresponding list
-	createNewListItem(selectionCategory, createIDString, textToSelect);
+	createNewListItem(selectionCategory, createIDString, editedTextToShow);
 	
 	// highlight selection with category color
 	highlightSelection(textToSelect, selectionCategory, createIDString);
