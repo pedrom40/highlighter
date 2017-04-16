@@ -12,6 +12,13 @@
 	$categories2 = $conn->query($sql);
 	$categories3 = $conn->query($sql);
 	
+	// get student highlights for this challenge brief
+	$sql =  "SELECT id, category_id, selection_content ".
+					"FROM e2l.challenge_briefs_student_selections ".
+					"WHERE cb_id = 1 ".
+						"AND student_id = 1";
+	$studentSelections = $conn->query($sql);
+	
 	$conn->close();
 	
 ?>
@@ -66,7 +73,6 @@
     </div>
     
     <?php include '/includes/modals.php' ?>
-    
     <?php include '/includes/footer-resources.php' ?>
   </body>
 </html>

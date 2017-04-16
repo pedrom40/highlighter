@@ -212,9 +212,6 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 			var createIDString = 'category'+categoryIDToSaveItTo+'_'+newRecordID;
 			createIDString.toString();
 			
-			// show selections container
-			$('#selectionsContainer').show('fast');
-			
 			// push to corresponding list
 			createNewListItem(categoryIDToSaveItTo, createIDString, textToSave);
 			
@@ -521,5 +518,25 @@ function resetDeleteSelectionDialog(){
 	
 	// close the category selection dialog
 	$('#deleteSelectionDialog').modal('hide');
+	
+}
+
+function loadSelections(recordID, selectionCategory, textToSelect){
+	
+	// make clean ID reference
+	var createIDString = 'category'+selectionCategory+'_'+recordID;
+	createIDString.toString();
+	
+	// push to corresponding list
+	createNewListItem(selectionCategory, createIDString, textToSelect);
+	
+	// highlight selection with category color
+	highlightSelection(textToSelect, selectionCategory, createIDString);
+	
+	// activate list header
+	$('#category'+selectionCategory+' .categoryName').addClass('activated');
+	
+	// show toggle button on category header
+	$('#category'+selectionCategory+' dd span').show('fast');
 	
 }
