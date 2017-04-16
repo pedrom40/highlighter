@@ -1,6 +1,7 @@
 # Challenge Brief Highlighter
 Interactive app that saves selected text to categories for further study. Student may add as many text selections as needed and has ability to edit and delete them. All interactions are saved to the student database and preload upon refresh.
 
+
 # Features
 * Works in all major browsers: Chrome, FireFox, MS Edge/IE, Safari (not tested on Mac because I don't have one)
 * Works on touch devices
@@ -14,11 +15,13 @@ Interactive app that saves selected text to categories for further study. Studen
 * jQuery
 * Bootstrap
 
+
 # New Features to Add
 * Virtual walk through to demonstrate how to use the app
-* Utilize database transactions. Tried but couldn't get this to work, need a little more PHP research time
-* Real-time handling features. 
+* Utilize database transactions to prevent issues that arise from multiple users at the same time. Tried but couldn't get this to work, need a little more PHP research time
+* Real-time handling features. Switch from AJAX to WebSockets or Webhooks to better handle data transfer
 * Sorting of selections. I would like to add a feature where students can drag and drop a selection to reorder them under their headings
+
 
 # Bugs
 * MS Edge: After selecting text, the browser selects the rest of the page even though it only saves original selection
