@@ -5,7 +5,6 @@ Interactive app that saves selected text to categories for further study. Studen
 # Features
 * Works in all major browsers: Chrome, FireFox, MS Edge/IE, Safari (not tested on Mac because I don't have one)
 * Works on touch devices
-* Created function that highlights the whole word even if only half the word was highlighted.
 * Single page app, no page reloading
 
 
@@ -29,4 +28,4 @@ Interactive app that saves selected text to categories for further study. Studen
 * MS Edge: After selecting text, the browser selects the rest of the page even though it only saves original selection
 * The expand/collapse icon doesn't change as applied, need to fix that
 * Not necessarily a bug, but thought I'd mention hard-coded query copying because I couldn't loop through the same query results more than once. Again, need more PHP research time
-* On single word double click, it selects the word next to it
+* Tried to create a function that highlights the whole word even if only half the word was highlighted, however I had to scrap it because on a single word double click, it selects the word next to it
