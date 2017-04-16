@@ -77,6 +77,7 @@
         <div id="deleteSelectionDisplay"></div><br>
         
         <input type="hidden" id="deleteSelectionElementID" value="">
+        <input type="hidden" id="deleteRecordID" value="">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="deleteSelectionConfirmBtn">Yes, Delete It</button>

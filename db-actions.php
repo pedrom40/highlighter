@@ -51,6 +51,28 @@
 		
 	}
 	
+	// if deleting a record
+	else if ($_POST['action'] == 'delete'){
+		
+		// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
+		$sql = 	"DELETE FROM e2l.challenge_briefs_student_selections ".
+						"WHERE id = ".$_POST['record_id'];
+		
+		// if action worked
+		if ($conn->query($sql) === TRUE) {
+			
+			// return new ID of record
+			echo 'Record successfully deleted.';
+			
+		}
+		
+		// if it didn't
+		else {
+			echo "Error: " . $sql . "<br>" . $conn->error;
+		}
+		
+	}
+	
 	// close DB connection
 	$conn->close();
 	

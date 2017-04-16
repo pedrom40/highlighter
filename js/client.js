@@ -320,6 +320,13 @@ function getCategoryID(elementToSearch){ // from element like this: category2_2 
 	
 }
 
+function getRecordID(elementToSearch){ // from element like this: category2_2 (returns the number after '_')
+	
+	var splitElement = elementToSearch.split('_');
+	return splitElement[1];
+	
+}
+
 function saveEditedSelection(){
 	
 	// get record id
@@ -353,8 +360,12 @@ function saveEditedSelection(){
 		// update list item
 		$('dd#'+elementID).html(updatedSelectionText);
 		
-		// if category changed
-		if (elementID.startsWith('category'+selectedCategory) == false){
+		// save old and new element IDs
+		var originalElementID = elementID.substr(0, 9);
+		var selectedElementID = 'category'+selectedCategory;
+		
+		// if they don't match, then category changed (used startsWith at first, but not supported by safari)
+		if (originalElementID !== selectedElementID){
 			
 			// delete old highlight
 			deleteHighlightedSelection(elementID);
@@ -402,6 +413,10 @@ function deleteSelectionConfirm(elementID){
 	// remove btn identifier
 	var cleanElementID = elementID.replace("_deleteBtn", "");
 	
+	// set categoryEdit selection
+	var recordID = getRecordID(cleanElementID);
+	$('#deleteRecordID').val(recordID);
+	
 	// set selection in window for reference
 	$('#deleteSelectionDisplay').html('<em>'+$('dd#'+cleanElementID).html()+'</em>');
 	
@@ -412,35 +427,62 @@ function deleteSelectionConfirm(elementID){
 
 function deleteSelection(){
 	
-	// get clean ID
-	var elementID = $('#deleteSelectionElementID').val();
+	// get record ID
+	var recordID = $('#deleteRecordID').val();
 	
-	// remove highlight
-	deleteHighlightedSelection(elementID);
+	// post to DB
+	$.ajax({
+		method:"POST",
+		url:"db-actions.php",
+		data: {action:'delete', record_id:recordID}
+	})
 	
-	// destroy dd element
-	$('dd#'+elementID).remove();
-	
-	// destroy dd buttons
-	$('dd#buttons_'+elementID).remove();
-	
-	// get the category list length
-	var splitElement = elementID.split('_');
-	var listLen = $('dl#'+splitElement[0]+' dd').length;
-	
-	// if only header element in the list is left
-	if (listLen <= 1){
+	// on successful post
+	.done(function(recordID) {
 		
-		// hide chevron
-		$('dl#'+splitElement[0]+' .categoryName span').css('display', 'none');
+		// get clean ID
+		var elementID = $('#deleteSelectionElementID').val();
 		
-		// deactivate header
-		$('dl#'+splitElement[0]+' .categoryName').removeClass('activated');
+		// remove highlight
+		deleteHighlightedSelection(elementID);
 		
-	}
+		// destroy dd element
+		$('dd#'+elementID).remove();
+		
+		// destroy dd buttons
+		$('dd#buttons_'+elementID).remove();
+		
+		// get the category list length
+		var splitElement = elementID.split('_');
+		var listLen = $('dl#'+splitElement[0]+' dd').length;
+		
+		// if only header element in the list is left
+		if (listLen <= 1){
+			
+			// hide chevron
+			$('dl#'+splitElement[0]+' .categoryName span').css('display', 'none');
+			
+			// deactivate header
+			$('dl#'+splitElement[0]+' .categoryName').removeClass('activated');
+			
+		}
+		
+		// close delete dialog
+		resetDeleteSelectionDialog();
+		
+	})
 	
-	// close delete dialog
-	resetDeleteSelectionDialog();
+	// on error
+	.error(function(jqXHR, textStatus, errorThrown){
+		
+		// create error string
+		var error_string = '<h3>Error Occurred:</h3> <p>' + textStatus + ' ' + errorThrown + '</p>';
+		
+		// display error string
+		$('#alertContainer').html(error_string);
+		$('#alertContainer').show();
+		
+	});
 	
 }
 
@@ -470,6 +512,9 @@ function resetEditSelectionDialog(){
 }
 
 function resetDeleteSelectionDialog(){
+	
+	// reset record ID
+	$('#deleteRecordID').val('');
 	
 	// reset category select menu
 	$('#deleteSelectionDisplay').val('');
