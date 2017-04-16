@@ -27,3 +27,4 @@ Interactive app that saves selected text to categories for further study. Studen
 * MS Edge: After selecting text, the browser selects the rest of the page even though it only saves original selection
 * The expand/collapse icon doesn't change as applied, need to fix that
 * Not necessarily a bug, but thought I'd mention hard-coded query copying because I couldn't loop through the same query results more than once. Again, need more PHP research time
+* On single word double click, it selects the word next to it
