@@ -383,17 +383,17 @@ function saveEditedSelection(){
 	// get selected category
 	var selectedCategory = $('#editCategoryID').val();
 	
-	// get original selection text
-	var originalSelectionText = $('#editSelectionHolderOriginal').val();
-	
 	// get updated selection text
 	var updatedSelectionText = $('#editSelectionHolder').val();
+	
+	// convert to JSON
+	updatedSelectionText = JSON.stringify(updatedSelectionText);
 	
 	// post to DB
 	$.ajax({
 		method:"POST",
 		url:"db-actions.php",
-		data: {action:'update', record_id:recordID, category_id:selectedCategory, selection_content:originalSelectionText, selection_content_edited:updatedSelectionText}
+		data: {action:'update', record_id:recordID, category_id:selectedCategory, selection_content_edited:updatedSelectionText}
 	})
 	
 	// on successful post

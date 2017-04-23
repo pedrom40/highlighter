@@ -53,20 +53,23 @@
 	else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'update'){
 		
 		// check for req. fields
-		if (!empty($_POST['record_id']) && !empty($_POST['category_id']) && !empty($_POST['selection_content']) && !empty($_POST['selection_content_edited'])){
+		if (!empty($_POST['record_id']) && !empty($_POST['category_id']) && !empty($_POST['selection_content_edited'])){
 			
 			// assign cleaner variables
 			$recordID 							= trim($_POST['record_id']);
 			$categoryID 						= trim($_POST['category_id']);
-			$selectionContent 			= trim($_POST['selection_content']);
-			$selectionContentEdited = trim($_POST['selection_content_edited']);
+			$selectionContentEdited = trim(json_encode($_POST['selection_content_edited']));
+			
+			// remove double quotes
+			$convertedSelectionContentEdited = (string)$selectionContentEdited;
+			$cleanedSelectionContentEdited = str_replace('""', '"', $convertedSelectionContentEdited);
+			$trimmedSelectionContentEdited = substr($cleanedSelectionContentEdited, 1);
 			
 			// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
 			$sql = 	"UPDATE e2l.challenge_briefs_student_selections ".
 							"SET ".
 								"category_id = ".$categoryID.", ".
-								"selection_content = '".$selectionContent."', ".
-								"selection_content_edited = '".$selectionContentEdited."' ".
+								"selection_content_edited = '".$trimmedSelectionContentEdited."' ".
 							"WHERE id = ".$recordID;
 			
 			// if action worked
