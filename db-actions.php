@@ -4,91 +4,167 @@
 	require '/includes/db-connection.php';
 	
 	// if inserting new record
-	if ($_POST['action'] == 'insert'){
+	if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'insert'){
 		
-		// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
-		$sql = 	"INSERT INTO e2l.challenge_briefs_student_selections (student_id, cb_id, category_id, selection_content, selection_content_edited)".
-						"VALUES (".$_POST['student_id'].", ".$_POST['cb_id'].", ".$_POST['category_id'].", '".$_POST['selection_content']."', '".$_POST['selection_content']."')";
-		
-		// if action worked
-		if ($conn->query($sql) === TRUE) {
+		// check for req. fields
+		if (!empty($_POST['student_id']) && !empty($_POST['cb_id']) && !empty($_POST['category_id']) && !empty($_POST['selection_content'])){
 			
-			// return new ID of record
-			echo $conn->insert_id;
+			// assign cleaner variables
+			$studentID 				= trim($_POST['student_id']);
+			$cbID 						= trim($_POST['cb_id']);
+			$categoryID 			= trim($_POST['category_id']);
+			$selectionContent = trim(json_encode($_POST['selection_content']));
+			
+			// remove double quotes
+			$convertedSelectionContent = (string)$selectionContent;
+			$cleanedSelectionContent = str_replace('""', '"', $convertedSelectionContent);
+			$trimmedSelectionContent = substr($cleanedSelectionContent, 1);
+			
+			// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
+			$sql = 	"INSERT INTO e2l.challenge_briefs_student_selections (student_id, cb_id, category_id, selection_content, selection_content_edited)".
+							"VALUES (".$studentID.", ".$cbID.", ".$categoryID.", '".$trimmedSelectionContent."', '".$trimmedSelectionContent."')";
+			
+			// if action worked
+			if ($conn->query($sql) === TRUE) {
+				
+				// return new ID of record
+				echo $conn->insert_id;
+				
+			}
+			
+			// if it didn't
+			else {
+				echo "Error: " . $sql . "<br>" . $conn->error;
+			}
 			
 		}
 		
-		// if it didn't
+		// if missing req. info
 		else {
-			echo "Error: " . $sql . "<br>" . $conn->error;
+			
+			// send error msg
+			echo 'Error: Please fill in all required information before submitting the form.';
+			
 		}
 		
 	}
 	
 	// if updating a record
-	else if ($_POST['action'] == 'update'){
+	else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'update'){
 		
-		// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
-		$sql = 	"UPDATE e2l.challenge_briefs_student_selections ".
-						"SET ".
-							"category_id = ".$_POST['category_id'].", ".
-							"selection_content = '".$_POST['selection_content']."', ".
-							"selection_content_edited = '".$_POST['selection_content_edited']."' ".
-						"WHERE id = ".$_POST['record_id'];
-		
-		// if action worked
-		if ($conn->query($sql) === TRUE) {
+		// check for req. fields
+		if (!empty($_POST['record_id']) && !empty($_POST['category_id']) && !empty($_POST['selection_content']) && !empty($_POST['selection_content_edited'])){
 			
-			// return new ID of record
-			echo $_POST['record_id'];
+			// assign cleaner variables
+			$recordID 							= trim($_POST['record_id']);
+			$categoryID 						= trim($_POST['category_id']);
+			$selectionContent 			= trim($_POST['selection_content']);
+			$selectionContentEdited = trim($_POST['selection_content_edited']);
+			
+			// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
+			$sql = 	"UPDATE e2l.challenge_briefs_student_selections ".
+							"SET ".
+								"category_id = ".$categoryID.", ".
+								"selection_content = '".$selectionContent."', ".
+								"selection_content_edited = '".$selectionContentEdited."' ".
+							"WHERE id = ".$recordID;
+			
+			// if action worked
+			if ($conn->query($sql) === TRUE) {
+				
+				// return new ID of record
+				echo $recordID;
+				
+			}
+			
+			// if it didn't
+			else {
+				echo "Error: " . $sql . "<br>" . $conn->error;
+			}
 			
 		}
 		
-		// if it didn't
+		// if missing req. info
 		else {
-			echo "Error: " . $sql . "<br>" . $conn->error;
+			
+			// send error msg
+			echo 'Error: Please fill in all required information before submitting the form.';
+			
 		}
 		
 	}
 	
 	// else if getting original text
-	else if ($_POST['action'] == 'getOriginalText'){
+	else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'getOriginalText'){
 		
-		// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
-		$sql 		= "SELECT selection_content FROM e2l.challenge_briefs_student_selections WHERE id = ".$_POST['record_id'];
-		$result = $conn->query($sql);
-		
-		if ($result->num_rows > 0) {
+		// check for req. fields
+		if (!empty($_POST['record_id'])){
 			
-			// output data of each row
-			while($row = $result->fetch_assoc()) {
+			// assign cleaner variables
+			$recordID = trim($_POST['record_id']);
+			
+			// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
+			$sql 		= "SELECT selection_content FROM e2l.challenge_briefs_student_selections WHERE id = ".$recordID;
+			$result = $conn->query($sql);
+			
+			// if rows exists
+			if ($result->num_rows > 0) {
 				
-				echo $row["selection_content"];
+				// output data of each row
+				while($row = $result->fetch_assoc()) {
+					
+					echo $row["selection_content"];
+					
+				}
 				
 			}
+			
+		}
+		
+		// if missing req. info
+		else {
+			
+			// send error msg
+			echo 'Error: Please fill in all required information before submitting the form.';
 			
 		}
 		
 	}
 	
 	// if deleting a record
-	else if ($_POST['action'] == 'delete'){
+	else if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] == 'delete'){
 		
-		// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
-		$sql = 	"DELETE FROM e2l.challenge_briefs_student_selections ".
-						"WHERE id = ".$_POST['record_id'];
-		
-		// if action worked
-		if ($conn->query($sql) === TRUE) {
+		// check for req. fields
+		if (!empty($_POST['record_id'])){
 			
-			// return new ID of record
-			echo 'Record successfully deleted.';
+			// assign cleaner variables
+			$recordID = trim($_POST['record_id']);
+			
+			// insert statement (need to learn how to use TRANSACTIONS with PHP, need to sanitize form values)
+			$sql = 	"DELETE FROM e2l.challenge_briefs_student_selections ".
+							"WHERE id = ".$recordID;
+			
+			// if action worked
+			if ($conn->query($sql) === TRUE) {
+				
+				// return new ID of record
+				echo 'Record successfully deleted.';
+				
+			}
+			
+			// if it didn't
+			else {
+				echo "Error: " . $sql . "<br>" . $conn->error;
+			}
 			
 		}
 		
-		// if it didn't
+		// if missing req. info
 		else {
-			echo "Error: " . $sql . "<br>" . $conn->error;
+			
+			// send error msg
+			echo 'Error: Please fill in all required information before submitting the form.';
+			
 		}
 		
 	}

@@ -47,6 +47,7 @@
 								
 								echo "<h1>".$row["title"]."</h1>";
 								echo $row["content"];
+								
 								echo '<input type="hidden" id="cbID" value="'.$row["id"].'">';
 								echo '<input type="hidden" id="studentID" value="1">';
 								

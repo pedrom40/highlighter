@@ -98,6 +98,8 @@ function callSelectionFunctions(){
 }
 
 function getTextSelection() {
+	
+	// text only version
 	var textSelection;
 	
 	// if browser supports getSelection and .modify
@@ -201,6 +203,9 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 		// get student id
 		var studentID = $('#studentID').val();
 		
+		// convert to JSON
+		textToSave = JSON.stringify(textToSave);
+		
 		// post to DB
 		$.ajax({
 			method:"POST",
@@ -218,8 +223,18 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 			// push to corresponding list
 			createNewListItem(categoryIDToSaveItTo, createIDString, textToSave);
 			
-			// highlight selection with category color
-			highlightSelection(textToSave, categoryIDToSaveItTo, createIDString);
+			// split at '\n\n'
+			var splitText = textToSave.toString()
+																	.replace('"', '')
+																	.split('\n\n');
+			
+			// loop thru result and highlight pieces
+			for (var i=0; i < splitText.length; i++){
+				
+				// highlight selection with category color
+				highlightSelection(splitText[i].replace('"', ''), categoryIDToSaveItTo, createIDString);
+				
+			}
 			
 			// activate list header
 			$('#category'+categoryIDToSaveItTo+' .categoryName').addClass('activated');
@@ -250,7 +265,7 @@ function saveTextToCategory(textToSave, categoryIDToSaveItTo){
 
 function createNewListItem(categoryID, elementID, selectionText){
 	
-	$('#category'+categoryID).append('<dd id="'+elementID+'" class="savedElements">'+selectionText+'</dd>');
+	$('#category'+categoryID).append('<dd id="'+elementID+'" class="savedElements">'+JSON.parse(JSON.stringify(selectionText))+'</dd>');
 	$('#category'+categoryID).append(''+
 		'<dd id="buttons_'+elementID+'" class="buttons">'+
 			'<div class="btn-group btn-group-xs" role="group" aria-label="selectionBtns">'+
@@ -266,7 +281,7 @@ function highlightSelection(textToSave, categoryIDToSaveItTo, elementNumber){
 	var src_str = $('#cbContent').html();
 	var term = textToSave;
 	term = term.replace(/(\s+)/,'(<[^>]+>)*$1(<[^>]+>)*');
-	var pattern = new RegExp("("+term+")", "gi");
+	var pattern = new RegExp('('+term+')', "gi");
 	
 	src_str = src_str.replace(pattern, '<mark id="mark_'+elementNumber+'" class="category'+categoryIDToSaveItTo+'Highlight">$1</mark>');
 	src_str = src_str.replace(/(<mark>[^<>]*)((<[^>]+>)+)([^<>]*<\/mark>)/,"$1</mark>$2<mark>$4");
@@ -567,8 +582,18 @@ function loadSelections(recordID, selectionCategory, textToSelect, editedTextToS
 	// push to corresponding list
 	createNewListItem(selectionCategory, createIDString, editedTextToShow);
 	
-	// highlight selection with category color
-	highlightSelection(textToSelect, selectionCategory, createIDString);
+	// split at '\n\n'
+	var splitText = textToSelect.toString()
+															.replace('"', '')
+															.split('\n\n');
+	
+	// loop thru result and highlight pieces
+	for (var i=0; i < splitText.length; i++){
+		
+		// highlight selection with category color
+		highlightSelection(splitText[i].replace('"', ''), selectionCategory, createIDString);
+		
+	}
 	
 	// activate list header
 	$('#category'+selectionCategory+' .categoryName').addClass('activated');
